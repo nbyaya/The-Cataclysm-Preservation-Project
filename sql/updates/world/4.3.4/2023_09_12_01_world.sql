@@ -1,3 +1,5 @@
+UPDATE `creature_template` SET `npcflag` = 16777216 WHERE `entry` = 36440;
+
 DELETE FROM `areatrigger_scripts` WHERE `entry` IN (5542, 5543, 5544, 5545, 5546, 5547, 5548, 5549, 5550, 5551, 5552, 5553, 5554, 5567, 5568, 5574, 5575, 5576, 5577);
 
 INSERT INTO `areatrigger_scripts` (`entry`, `ScriptName`) VALUES
