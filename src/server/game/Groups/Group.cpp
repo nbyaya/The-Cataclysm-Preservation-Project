@@ -1030,7 +1030,7 @@ bool CanRollOnItem(const LootItem& item, Player const* player)
     if (!proto)
         return false;
 
-    uint32 itemCount = player->GetItemCount(item.itemid);
+    uint32 itemCount = player->GetItemCount(item.itemid, true);
     if (proto->GetMaxCount() > 0 && itemCount >= proto->GetMaxCount())
         return false;
 
@@ -1434,7 +1434,6 @@ void Group::CountTheRoll(Rolls::iterator rollI, Map* allowedMap)
     if (!roll->isValid())                                   // is loot already deleted ?
     {
         RollId.erase(rollI);
-        delete roll;
         return;
     }
 
@@ -1612,7 +1611,6 @@ void Group::CountTheRoll(Rolls::iterator rollI, Map* allowedMap)
     }
 
     RollId.erase(rollI);
-    delete roll;
 }
 
 void Group::SetTargetIcon(uint8 id, ObjectGuid whoGuid, ObjectGuid targetGuid)
