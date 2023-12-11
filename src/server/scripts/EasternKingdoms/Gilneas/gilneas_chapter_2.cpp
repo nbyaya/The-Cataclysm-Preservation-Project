@@ -31,9 +31,8 @@
 #include "Vehicle.h"
 #include "GameObjectAI.h"
 #include "GameObject.h"
+#include "SpellMgr.h"
 
-namespace Gilneas::Chapter2
-{
 enum GilneasInvasionCamera
 {
     CINEMATIC_FORSAKEN_INVASION = 168
@@ -627,6 +626,31 @@ class spell_gilneas_worgen_intro_completion : public SpellScript
     }
 };
 
+//Round Up Horse
+class spell_round_up_horse : public SpellScript
+{
+    bool Validate(SpellInfo const* /*spellInfo*/)
+    {
+        if (!sSpellMgr->GetSpellInfo(68903)) return false;
+        return true;
+    }
+
+    void HandleEffectDummy(SpellEffIndex /*effIndex*/)
+    {
+        if (GetHitUnit()->GetTypeId() != TYPEID_UNIT ||
+            GetCaster()->GetTypeId() != TYPEID_PLAYER ||
+            GetCaster()->ToPlayer()->GetQuestStatus(14416) !=
+                QUEST_STATUS_INCOMPLETE)
+            return;
+        GetHitUnit()->ToCreature()->DespawnOrUnsummon(1);
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget.Register(&spell_round_up_horse::HandleEffectDummy,EFFECT_1, SPELL_EFFECT_DUMMY);
+    }
+};
+
 enum GaspingForBreath
 {
     NPC_DROWNING_WATCHMAN_CREDIT        = 36450,
@@ -697,11 +721,9 @@ public:
         return true;
     }
 };
-}
 
 void AddSC_gilneas_chapter_2()
 {
-    using namespace Gilneas::Chapter2;
     RegisterGameObjectAI(go_gilneas_invasion_camera);
     RegisterCreatureAI(npc_gilneas_horrid_abomination);
     RegisterCreatureAI(npc_gilneas_save_the_children);
@@ -714,5 +736,6 @@ void AddSC_gilneas_chapter_2()
     RegisterSpellScript(spell_gilneas_worgen_intro_completion);
     RegisterSpellScript(spell_gilneas_save_drowning_milita_effect);
     RegisterSpellScript(spell_gilneas_drowning_vehicle_exit_dummy);
+	RegisterSpellScript(spell_round_up_horse);
     new at_gasping_for_breath();
 }
